@@ -2,7 +2,7 @@
  * Misc utility routines for accessing chip-specific features
  * of the SiliconBackplane-based Broadcom chips.
  *
- * Copyright (C) 1999-2016, Broadcom Corporation
+ * Copyright (C) 1999-2017, Broadcom Corporation
  * 
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
@@ -683,6 +683,7 @@ si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
 		}
 
 
+
 	/* clear any previous epidiag-induced target abort */
 	ASSERT(!si_taclear(sih, FALSE));
 
@@ -928,20 +929,24 @@ si_findcoreidx(si_t *sih, uint coreid, uint coreunit)
 	uint found;
 	uint i;
 
-    if (sii->cores_info == NULL) {
-            SI_ERROR(("%s: cores_info is NULL\n", __FUNCTION__));
-            return (BADIDX);
-    }
 
 	found = 0;
+	if (sii->cores_info == NULL) {
+		SI_ERROR(("%s: cores_info is NULL\n", __FUNCTION__));
+		return (BADIDX);
+	}
+	for (i = 0; i < sii->numcores; i++){
 
-	for (i = 0; i < sii->numcores; i++)
+		if (!GOODIDX(i))
+			return (BADIDX);
+
 		if (cores_info->coreid[i] == coreid) {
-			if (found == coreunit)
+			if (found == coreunit) {
 				return (i);
+			}
 			found++;
 		}
-
+	}
 	return (BADIDX);
 }
 
@@ -1026,11 +1031,9 @@ void *
 si_setcore(si_t *sih, uint coreid, uint coreunit)
 {
 	uint idx;
-
 	idx = si_findcoreidx(sih, coreid, coreunit);
 	if (!GOODIDX(idx))
 		return (NULL);
-
 	if (CHIPTYPE(sih->socitype) == SOCI_SB)
 		return sb_setcoreidx(sih, idx);
 	else if ((CHIPTYPE(sih->socitype) == SOCI_AI) || (CHIPTYPE(sih->socitype) == SOCI_NAI))

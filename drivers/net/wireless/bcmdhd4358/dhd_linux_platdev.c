@@ -1,7 +1,7 @@
 /*
  * Linux platform device for DHD WLAN adapter
  *
- * Copyright (C) 1999-2016, Broadcom Corporation
+ * Copyright (C) 1999-2017, Broadcom Corporation
  * 
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
@@ -108,7 +108,7 @@ wifi_adapter_info_t* dhd_wifi_platform_get_adapter(uint32 bus_type, uint32 bus_n
 		if ((adapter->bus_type == -1 || adapter->bus_type == bus_type) &&
 			(adapter->bus_num == -1 || adapter->bus_num == bus_num) &&
 			(adapter->slot_num == -1 || adapter->slot_num == slot_num)) {
-			DHD_TRACE(("found adapter info '%s'\n", adapter->name));
+			DHD_TRACE(("found adapter info '%s, %d, %d, %d'\n", adapter->name, adapter->bus_type, adapter->bus_num, adapter->slot_num));
 			return adapter;
 		}
 	}
