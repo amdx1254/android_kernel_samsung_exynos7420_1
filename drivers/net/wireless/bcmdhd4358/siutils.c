@@ -928,6 +928,10 @@ si_findcoreidx(si_t *sih, uint coreid, uint coreunit)
 	uint found;
 	uint i;
 
+    if (sii->cores_info == NULL) {
+            SI_ERROR(("%s: cores_info is NULL\n", __FUNCTION__));
+            return (BADIDX);
+    }
 
 	found = 0;
 
